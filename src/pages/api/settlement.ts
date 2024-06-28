@@ -22,6 +22,8 @@ export default async function handler() {
 	try {
 		const hackerNewsData = await getHackerNews();
 
+
+		/*
 		const res = await updateTopStories(
 			hackerNewsData.map((item) => ({
 				id: item.id,
@@ -32,6 +34,7 @@ export default async function handler() {
 				score: item.score,
 			}))
 		);
+		
 
 		console.log({
 			res,
@@ -39,6 +42,17 @@ export default async function handler() {
 				.map((item) => item.id)
 				.join(', ')} `,
 		});
+		*/
+
+
+		console.log({
+			data: `Updated top stories at ${new Date().toISOString()}. Ids: ${hackerNewsData
+				.map((item) => item.id)
+				.join(', ')} `,
+		});
+
+
+
 
 		return NextResponse.json({
 			data: `Updated top stories at ${new Date().toISOString()}. Ids: ${hackerNewsData
