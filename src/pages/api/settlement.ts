@@ -20,10 +20,12 @@ export default async function handler() {
 
 
 	try {
+
+		/*
 		const hackerNewsData = await getHackerNews();
 
 
-		/*
+		
 		const res = await updateTopStories(
 			hackerNewsData.map((item) => ({
 				id: item.id,
@@ -42,7 +44,7 @@ export default async function handler() {
 				.map((item) => item.id)
 				.join(', ')} `,
 		});
-		*/
+		
 
 
 		console.log({
@@ -59,6 +61,14 @@ export default async function handler() {
 				.map((item) => item.id)
 				.join(', ')} `,
 		});
+		*/
+
+
+		
+		return NextResponse.json({
+			data: `Hello, World!`
+		});
+
 
 	} catch (error: any) {
 
