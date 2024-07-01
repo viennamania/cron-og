@@ -164,78 +164,80 @@ export default async function handler() {
 
 		const totalAmount = parseFloat(balance.displayValue);
 
+
+
 		if (totalAmount > 0.0) {
 
 
-			const toAddressStore = '0xAeB385c91131Efd90d60b85D143Dd0467e161a7d';
+			//const toAddressStore = '0xAeB385c91131Efd90d60b85D143Dd0467e161a7d';
+			// fetch http://store.unove.space/api/storeWalletAddress?code=2000001
+			// {"result":1,"walletAddress":"0xAeB385c91131Efd90d60b85D143Dd0467e161a7d"}
 
-			// 99% USDT to this address
-			const sendAmountToStore = parseInt(Number(totalAmount * 0.995 * 1000000.0).toFixed(0)) / 1000000.0;
+			const response = await fetch('http://store.unove.space/api/storeWalletAddress?code=2000001');
+			const data = await response.json();
 
+			const toAddressStore = data.walletAddress;
 
-			const toAddressFee = '0xcF8EE13900ECb474e8Ce89E7868C7Fd1ae930971';
-			// get remaining amount
-			const sendAmountToFee = parseInt(Number( (totalAmount - sendAmountToStore) * 1000000.0).toFixed(0)) / 1000000.0;
+			if (toAddressStore) {
 
+				
 
-			console.log('walletAddress: ' + walletAddress + ' totalAmount: ' + totalAmount, 'sendAmountToStore: ' + sendAmountToStore, 'sendAmountToFee: ' + sendAmountToFee);
-
-
-
-			console.log('sendAmountToStore+sendAmountToFee', sendAmountToStore+sendAmountToFee);
-
-			/*
-            const transactionSendToStore = transfer({
-				contract,
-				to: toAddressStore,
-				amount: sendAmountToStore,
-			});
-
-			const responseStore = await sendAndConfirmTransaction({
-				transaction: transactionSendToStore,
-				account: account,
-			});
+				// 99% USDT to this address
+				const sendAmountToStore = parseInt(Number(totalAmount * 0.99 * 1000000.0).toFixed(0)) / 1000000.0;
 
 
-			console.log("Sent successfully!");
+				const toAddressFee = '0xcF8EE13900ECb474e8Ce89E7868C7Fd1ae930971';
+				// get remaining amount
+				const sendAmountToFee = parseInt(Number( (totalAmount - sendAmountToStore) * 1000000.0).toFixed(0)) / 1000000.0;
 
-			console.log(`Transaction hash: ${responseStore.transactionHash}`);
-			  
-			*/
 
-			  
-
-			const transactionSendToStore = transfer({
-				contract: contractUSDT,
-				to: toAddressStore,
-				amount: sendAmountToStore,
-			});
-
-			const transactionSendToFee = transfer({
-				contract: contractUSDT,
-				to: toAddressFee,
-				amount: sendAmountToFee,
-			});
+				console.log('walletAddress: ' + walletAddress + ' totalAmount: ' + totalAmount, 'sendAmountToStore: ' + sendAmountToStore, 'sendAmountToFee: ' + sendAmountToFee);
 
 
 
-			// SendBatchTransactionOptions
+				console.log('sendAmountToStore+sendAmountToFee', sendAmountToStore+sendAmountToFee);
 
-			const batchOptions: SendBatchTransactionOptions = {
-				account: account,
-				transactions: [transactionSendToStore, transactionSendToFee],
-			};
+				
+
+				const transactionSendToStore = transfer({
+					contract: contractUSDT,
+					to: toAddressStore,
+					amount: sendAmountToStore,
+				});
+
+				const transactionSendToFee = transfer({
+					contract: contractUSDT,
+					to: toAddressFee,
+					amount: sendAmountToFee,
+				});
 
 
-			const batchResponse = await sendBatchTransaction(
-				batchOptions
-			);
-			
 
-			//console.log('batchResponse', batchResponse);
+				// SendBatchTransactionOptions
 
-			console.log(`Transaction hash: ${batchResponse.transactionHash}`);
-			
+				const batchOptions: SendBatchTransactionOptions = {
+					account: account,
+					transactions: [transactionSendToStore, transactionSendToFee],
+				};
+
+
+				const batchResponse = await sendBatchTransaction(
+					batchOptions
+				);
+				
+
+				//console.log('batchResponse', batchResponse);
+
+				console.log(`Transaction hash: ${batchResponse.transactionHash}`);
+
+
+			} else {
+
+				console.log({
+					error: 'No store address found',
+				});
+				
+			}
 			
 
 		}
